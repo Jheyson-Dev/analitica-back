@@ -24,15 +24,28 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Role {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  users: [User!]
+}
+
 type Query {
   users: [User!]!
   user(id: Int!): User!
+  roles: [Role!]!
+  role(id: Int!): Role
 }
 
 type Mutation {
   createUser(data: CreateUserDto!): User!
   updateUser(id: Int!, data: UpdateUserDto!): User!
   removeUser(id: Int!): User!
+  createRole(data: CreateRoleDto!): Role!
+  updateRole(id: Int!): String!
+  removeRole(id: Int!): String!
 }
 
 input CreateUserDto {
@@ -61,4 +74,8 @@ input UpdateUserDto {
   roleId: Int
   areaId: Int
   status: Boolean
+}
+
+input CreateRoleDto {
+  name: String!
 }
