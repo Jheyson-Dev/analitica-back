@@ -32,6 +32,6 @@ export class CreateUserDto {
   @Field(() => Int, { nullable: true })
   areaId?: number;
 
-  @Field(() => Boolean, { nullable: true })
-  status?: boolean;
+  @Field(() => Boolean, {nullable:true})
+  status: boolean;
 }

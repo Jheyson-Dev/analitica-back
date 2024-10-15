@@ -32,11 +32,21 @@ type Role {
   users: [User!]
 }
 
+type Area {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  users: [User!]
+}
+
 type Query {
   users: [User!]!
   user(id: Int!): User!
   roles: [Role!]!
   role(id: Int!): Role
+  areas: [Area!]!
+  area(id: Int!): Area
 }
 
 type Mutation {
@@ -46,6 +56,9 @@ type Mutation {
   createRole(data: CreateRoleDto!): Role!
   updateRole(id: Int!): String!
   removeRole(id: Int!): String!
+  createArea(data: CreateAreaDto!): Area!
+  updateArea(id: Int!, data: UpdateAreaDto!): Area!
+  removeArea(id: Int!): String!
 }
 
 input CreateUserDto {
@@ -78,4 +91,12 @@ input UpdateUserDto {
 
 input CreateRoleDto {
   name: String!
+}
+
+input CreateAreaDto {
+  name: String!
+}
+
+input UpdateAreaDto {
+  name: String
 }
