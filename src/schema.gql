@@ -64,6 +64,7 @@ type Mutation {
   updateArea(id: Int!, data: UpdateAreaDto!): Area!
   removeArea(id: Int!): String!
   login(data: LoginInput!): Auth!
+  changePassword(data: ChangePasswordInput!): User!
 }
 
 input CreateUserDto {
@@ -109,4 +110,10 @@ input UpdateAreaDto {
 input LoginInput {
   username: String!
   password: String!
+}
+
+input ChangePasswordInput {
+  username: String!
+  password: String!
+  newPassword: String!
 }

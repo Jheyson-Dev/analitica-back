@@ -1,11 +1,13 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { LoginInput } from './dto/login-input.sto';
+import { LoginInput } from './dto/login-input.dto';
 import { Auth } from './auth.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import * as bcrypt from 'bcrypt';
+import { ChangePasswordInput } from './dto/change-input.dto';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -44,6 +46,38 @@ export class AuthService {
 
     // Implement login logic here
     return { accestoken };
+  }
+
+  async changePassword(data: ChangePasswordInput): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: { username: data.username },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (!user.status) {
+      throw new UnauthorizedException('User is not active');
+    }
+
+    const valid = await bcrypt.compare(data.password, user.password);
+
+    if (!valid) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
+    const saltRounds = 10;
+    const newpassword = await bcrypt.hash(data.newPassword, saltRounds);
+
+    const response = await this.prisma.user.update({
+      where: { username: data.username },
+      data: {
+        password: newpassword,
+      },
+    });
+
+    return response;
   }
 
   private generateToken(payload, expiresIn: string): string {
