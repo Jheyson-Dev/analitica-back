@@ -40,6 +40,10 @@ type Area {
   users: [User!]
 }
 
+type Auth {
+  accestoken: String!
+}
+
 type Query {
   users: [User!]!
   user(id: Int!): User!
@@ -59,6 +63,7 @@ type Mutation {
   createArea(data: CreateAreaDto!): Area!
   updateArea(id: Int!, data: UpdateAreaDto!): Area!
   removeArea(id: Int!): String!
+  login(data: LoginInput!): Auth!
 }
 
 input CreateUserDto {
@@ -99,4 +104,9 @@ input CreateAreaDto {
 
 input UpdateAreaDto {
   name: String
+}
+
+input LoginInput {
+  username: String!
+  password: String!
 }

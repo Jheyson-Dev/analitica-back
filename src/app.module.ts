@@ -10,9 +10,12 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { RoleModule } from './role/role.module';
 import { AreaModule } from './area/area.module';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
@@ -23,6 +26,7 @@ import { AreaModule } from './area/area.module';
     PrismaModule,
     RoleModule,
     AreaModule,
+    AuthModule,
   ],
 
   controllers: [],
