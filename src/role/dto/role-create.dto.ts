@@ -1,7 +1,6 @@
-import { InputType, Field, Int } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
 
-@InputType()
 export class CreateRoleDto {
-  @Field(() => String)
+  @ApiProperty({ example: 'Admin', description: 'Role name', required: true })
   name: string;
 }

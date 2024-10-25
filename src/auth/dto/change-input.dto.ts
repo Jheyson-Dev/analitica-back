@@ -1,13 +1,12 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
 
-@InputType()
 export class ChangePasswordInput {
-  @Field()
+  @ApiProperty({ example: 'john_doe', description: 'Username' })
   username: string;
 
-  @Field()
+  @ApiProperty({ example: 'oldpassword123', description: 'Current password' })
   password: string;
 
-  @Field()
+  @ApiProperty({ example: 'newpassword123', description: 'New password' })
   newPassword: string;
 }

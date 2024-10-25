@@ -1,5 +1,5 @@
-import { InputType, Field, PartialType } from '@nestjs/graphql';
-import { CreateRoleDto } from './role-create.dto';
-
-@InputType()
-export class UpdateRoleDto extends PartialType(CreateRoleDto) {}
+import { ApiProperty } from '@nestjs/swagger';
+export class UpdateRoleDto {
+  @ApiProperty({ example: 'Admin', description: 'Role name', required: false })
+  name?: string;
+}

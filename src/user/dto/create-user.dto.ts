@@ -1,37 +1,67 @@
-import { InputType, Field, Int } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
 
-@InputType()
 export class CreateUserDto {
-  @Field(() => String, { nullable: true })
+  @ApiProperty({
+    example: 'john_doe',
+    description: 'The username of the user',
+    required: false,
+  })
   username?: string;
 
-  @Field(() => String, { nullable: true })
+  @ApiProperty({
+    example: 'password123',
+    description: 'The password of the user',
+    required: false,
+  })
   password?: string;
 
-  @Field(() => String)
+  @ApiProperty({ example: 'John', description: 'The first name of the user' })
   name: string;
 
-  @Field(() => String)
+  @ApiProperty({ example: 'Doe', description: 'The last name of the user' })
   lastname: string;
 
-  @Field(() => String)
+  @ApiProperty({
+    example: 'john.doe@example.com',
+    description: 'The email of the user',
+  })
   email: string;
 
-  @Field(() => String, { nullable: true })
+  @ApiProperty({
+    example: '1234567890',
+    description: 'The phone number of the user',
+    required: false,
+  })
   phone?: string;
 
-  @Field(() => String)
+  @ApiProperty({ example: '12345678A', description: 'The DNI of the user' })
   dni: string;
 
-  @Field(() => Int, { nullable: true })
+  @ApiProperty({
+    example: 30,
+    description: 'The age of the user',
+    required: false,
+  })
   age?: number;
 
-  @Field(() => Int, { nullable: true })
+  @ApiProperty({
+    example: 1,
+    description: 'The role ID of the user',
+    required: false,
+  })
   roleId?: number;
 
-  @Field(() => Int, { nullable: true })
+  @ApiProperty({
+    example: 1,
+    description: 'The area ID of the user',
+    required: false,
+  })
   areaId?: number;
 
-  @Field(() => Boolean, {nullable:true})
-  status: boolean;
+  @ApiProperty({
+    example: true,
+    description: 'The status of the user',
+    required: false,
+  })
+  status?: boolean;
 }

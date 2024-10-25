@@ -1,7 +1,6 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
 
-@InputType()
 export class CreateAreaDto {
-  @Field(() => String)
+  @ApiProperty({ example: 'IT', description: 'Area name' })
   name: string;
 }

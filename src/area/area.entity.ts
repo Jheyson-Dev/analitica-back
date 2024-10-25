@@ -1,20 +1,26 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/user/user.entity';
 
-@ObjectType()
 export class Area {
-  @Field(() => Int)
+  @ApiProperty({ example: 1, description: 'Area ID' })
   id: number;
 
-  @Field(() => String)
+  @ApiProperty({ example: 'IT', description: 'Area name' })
   name: string;
 
-  @Field(() => Date)
+  @ApiProperty({
+    example: '2023-10-01T00:00:00Z',
+    description: 'Creation date',
+  })
   createdAt: Date;
 
-  @Field(() => Date)
+  @ApiProperty({ example: '2023-10-01T00:00:00Z', description: 'Update date' })
   updatedAt: Date;
 
-  @Field(() => [User], { nullable: true })
+  @ApiProperty({
+    type: () => [User],
+    description: 'List of users in the area',
+    required: false,
+  })
   users?: User[];
 }

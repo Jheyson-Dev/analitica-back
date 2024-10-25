@@ -1,5 +1,6 @@
-import { InputType, PartialType } from '@nestjs/graphql';
-import { CreateAreaDto } from './area-create.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
-@InputType()
-export class UpdateAreaDto extends PartialType(CreateAreaDto) {}
+export class UpdateAreaDto {
+  @ApiProperty({ example: 'IT', description: 'Area name', required: false })
+  area?: string;
+}

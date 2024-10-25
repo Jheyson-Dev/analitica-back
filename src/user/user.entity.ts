@@ -1,53 +1,61 @@
-// import { Role } from './role.entity';
-// import { Area } from './area.entity';
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-@ObjectType()
+import { ApiProperty } from '@nestjs/swagger';
+import { Area } from 'src/area/area.entity';
+import { Log } from 'src/auth/log.entity';
+import { Role } from 'src/role/role.entity';
+
 export class User {
-  @Field(() => Int)
+  @ApiProperty({ example: 1, description: 'User ID' })
   id: number;
 
-  @Field(() => String)
+  @ApiProperty({ example: 'john_doe', description: 'Username' })
   username: string;
 
-  @Field(() => String)
+  @ApiProperty({ example: 'password123', description: 'Password' })
   password: string;
 
-  @Field(() => String)
+  @ApiProperty({ example: 'John', description: 'First name' })
   name: string;
 
-  @Field(() => String)
+  @ApiProperty({ example: 'Doe', description: 'Last name' })
   lastname: string;
 
-  @Field(() => String)
+  @ApiProperty({ example: 'john.doe@example.com', description: 'Email' })
   email: string;
 
-  @Field(() => String, { nullable: true })
+  @ApiProperty({
+    example: '1234567890',
+    description: 'Phone number',
+    required: false,
+  })
   phone?: string;
 
-  @Field(() => String)
+  @ApiProperty({ example: '12345678A', description: 'DNI' })
   dni: string;
 
-  @Field(() => String, { nullable: true })
-  age?: number;
-
-  @Field(() => Int, { nullable: true })
+  @ApiProperty({ example: 1, description: 'Role ID', required: false })
   roleId?: number;
 
-  @Field(() => Int, { nullable: true })
+  @ApiProperty({ example: 1, description: 'Area ID', required: false })
   areaId?: number;
 
-  @Field(() => Boolean)
+  @ApiProperty({ example: true, description: 'Status' })
   status: boolean;
 
-  @Field(() => Date)
+  @ApiProperty({
+    example: '2023-10-01T00:00:00Z',
+    description: 'Creation date',
+  })
   createdAt: Date;
 
-  @Field(() => Date)
+  @ApiProperty({ example: '2023-10-01T00:00:00Z', description: 'Update date' })
   updatedAt: Date;
 
-  //   @Field(() => Role)
-  //   role: Role;
+  @ApiProperty({ type: () => Role, description: 'Role', required: false })
+  role?: Role;
 
-  //   @Field(() => Area, { nullable: true })
-  //   area?: Area;
+  @ApiProperty({ type: () => Area, description: 'Area', required: false })
+  area?: Area;
+
+  @ApiProperty({ type: () => Area, description: 'Area', required: false })
+  logs?: Log[];
 }
