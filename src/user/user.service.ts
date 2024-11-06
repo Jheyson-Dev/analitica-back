@@ -2,7 +2,6 @@ import {
   Injectable,
   NotFoundException,
   InternalServerErrorException,
-  BadRequestException,
 } from '@nestjs/common';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,6 +17,23 @@ export class UserService {
     try {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(data.dni, saltRounds);
+      console.log(data);
+
+      const rol = await this.prisma.role.findFirst({
+        where: {
+          id: data.roleId,
+        },
+      });
+      if (rol.name === 'jefe-area') {
+        return await this.prisma.user.create({
+          data: {
+            ...data,
+            managedId: data.areaId,
+            username: data.dni,
+            password: hashedPassword,
+          },
+        });
+      }
 
       const user = await this.prisma.user.create({
         data: {
@@ -44,7 +60,9 @@ export class UserService {
       });
       return response;
     } catch (error) {
-      console.log(error);
+      throw new InternalServerErrorException(
+        `Error fetching users: ${error.message}`,
+      );
     }
   }
 

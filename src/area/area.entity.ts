@@ -17,10 +17,20 @@ export class Area {
   @ApiProperty({ example: '2023-10-01T00:00:00Z', description: 'Update date' })
   updatedAt: Date;
 
+  @ApiProperty({ example: true, description: 'Status' })
+  status: boolean;
+
   @ApiProperty({
     type: () => [User],
     description: 'List of users in the area',
     required: false,
   })
   users?: User[];
+
+  @ApiProperty({
+    type: () => User,
+    description: 'Manager of the area',
+    required: false,
+  })
+  manager?: User;
 }

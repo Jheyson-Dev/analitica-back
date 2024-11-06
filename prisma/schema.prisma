@@ -25,14 +25,22 @@ model User {
   age        Int?
   roleId     Int?
   areaId     Int?
+  managedId  Int?
   status     Boolean  @default(true)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   role       Role?    @relation(fields: [roleId], references: [id])
-  area       Area?    @relation(fields: [areaId], references: [id])
+  // area       Area?    @relation(fields: [areaId], references: [id])
+  log        Log[]
 
-  log Log[]
+  notification Notification[]
+
+  area Area?  @relation(name: "UsersArea", fields: [areaId], references: [id])
+
+  managed Area? @relation(name: "UserManagment")
+
+  Voucher Voucher[]
 }
 
 model Role {
@@ -45,12 +53,16 @@ model Role {
 }
 
 model Area {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  name          String
+  managerId     Int?     @unique
+  createdAt     DateTime @default(now())
+  status        Boolean  @default(true)
+  updatedAt     DateTime @updatedAt
 
-  users      User[]
+  users      User[]   @relation(name: "UsersArea")
+  manager    User?    @relation(name: "UserManagment",fields: [managerId], references: [id])
+  warehouse  Warehouse?
 }
 
 model Log {
@@ -61,4 +73,137 @@ model Log {
   createdAt   DateTime @default(now())
 
   user       User      @relation(fields: [userId], references: [id])
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  price       Decimal   @db.Decimal(10, 2)
+  status      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  inventory   Inventory[]
+  kardex      Kardex[]
+  transfer    Transfer[]
+
+}
+
+model Warehouse {
+  id         Int       @id @default(autoincrement())
+  name       String
+  location   String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  status     Boolean   @default(true)
+  areaId     Int       @unique
+  
+  Inventory  Inventory[]
+  Kardex     Kardex[]
+  area       Area      @relation(fields: [areaId], references: [id])
+  transferOrigin      Transfer[] @relation("TransferOrigin")
+  transferDestination Transfer[] @relation("TransferDestination")
+
+}
+
+model Inventory {
+  id          Int       @id @default(autoincrement())
+  productId   Int
+  warehouseId Int
+  quantity    Int       @default(0)
+  minStock    Int       @default(10)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  product     Product   @relation(fields: [productId], references: [id])
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
+}
+
+model Kardex {
+  id            Int       @id @default(autoincrement())
+  movementType  String
+  quantity      Int
+  movementDate  DateTime  @default(now())
+  productId     Int
+  warehouseId   Int
+  
+  product       Product   @relation(fields: [productId], references: [id])
+  warehouse     Warehouse @relation(fields: [warehouseId], references: [id])
+}
+
+model Transfer {
+  id                      Int         @id @default(autoincrement())
+  quantity                Int
+  transferDate            DateTime    @default(now())
+  productId               Int
+  originWarehouseId       Int
+  destinationWarehouseId  Int
+  
+  originWarehouse         Warehouse   @relation("TransferOrigin", fields: [originWarehouseId], references: [id])
+  destinationWarehouse    Warehouse   @relation("TransferDestination", fields: [destinationWarehouseId], references: [id])
+  product                 Product     @relation(fields: [productId], references: [id])
+}
+
+model Notification {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  message     String
+  type        String?   // ALTERNATIVA: Enum con diferentes tipos de notificaciones
+  priority    Int?      // Ejemplo: 1 (alta), 2 (media), 3 (baja)
+  expiresAt   DateTime? // Fecha opcional de expiración de la notificación
+  isRead      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+
+model Voucher {
+  id               Int          @id @default(autoincrement())
+  gasStation       String       // Nombre del grifo
+  address          String       // Dirección
+  meta             String?      // Meta o propósito del vale
+  vehicle          String?      // Vehículo
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  items            VoucherItem[] // Lista de ítems del vale
+
+  activity        String       // Actividad a la que se destina el vale
+
+
+  // Firmas requeridas con ID de usuario y estado
+  requesterId              Int          // ID del solicitante
+  requesterSigned          Boolean @default(false) // Si el solicitante firmó
+
+  immediateBossId          Int?
+  immediateBossSigned      Boolean @default(false) // Si el jefe inmediato firmó
+
+  municipalManagerId       Int?
+  municipalManagerSigned   Boolean @default(false) // Si el gerente municipal firmó
+
+  supplyManagerId          Int?
+  supplyManagerSigned      Boolean @default(false) // Si el jefe de almacén/logística firmó
+
+  operatorId               Int?
+  operatorSigned           Boolean @default(false) // Si el operador firmó
+
+  warehouseManagerId       Int?
+  warehouseManagerSigned   Boolean @default(false) // Si el encargado de almacén firmó
+
+  aproved                  Boolean @default(false) // Si el vale fue aprobado
+
+  user        User         @relation(fields: [requesterId], references: [id])
+}
+
+model VoucherItem {
+  id          Int        @id @default(autoincrement())
+  voucherId   Int        // Relación con el vale
+  item        String     // Nombre o tipo del item
+  description String     // Descripción del item
+  quantity    Int        // Cantidad del item
+  total       Decimal    @db.Decimal(10, 2) // Total en galones o unidades
+
+  voucher     Voucher    @relation(fields: [voucherId], references: [id])
 }

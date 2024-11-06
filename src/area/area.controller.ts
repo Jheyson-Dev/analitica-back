@@ -44,7 +44,7 @@ export class AreaController {
     type: Area,
   })
   async findOne(@Param('id') id: number) {
-    return this.areaService.findOne(id);
+    return this.areaService.findOne(Number(id));
   }
 
   @Post()
@@ -68,7 +68,7 @@ export class AreaController {
     description: 'The area has been successfully updated.',
   })
   async update(@Param('id') id: number, @Body() data: UpdateAreaDto) {
-    return this.areaService.update(id, data);
+    return this.areaService.update(Number(id), data);
   }
 
   @Delete(':id')
@@ -83,6 +83,6 @@ export class AreaController {
     },
   })
   async remove(@Param('id') id: number) {
-    return this.areaService.remove(id);
+    return this.areaService.remove(Number(id));
   }
 }

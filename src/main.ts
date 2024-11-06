@@ -17,6 +17,7 @@ async function bootstrap() {
     jsonDocumentUrl: 'api/json',
   });
 
+  // await app.listen(3000, '192.168.18.22');
   await app.listen(3000);
 }
 bootstrap();

@@ -24,35 +24,40 @@ export class LogActivityMiddleware implements NestMiddleware {
       const decoded: any = this.JWTService.verify(token, {
         secret,
       });
+      req['user'] = decoded; // Añadir el objeto decodificado al objeto req
 
       const userId = decoded.id;
-      let action: string;
-      let description: string;
-      console.log(JSON.stringify(req.method));
-      switch (req.method) {
-        case 'POST':
-          action = 'create';
-          description = `Se creó un recurso en ${req.path}`;
-          break;
-        case 'PUT':
-          action = 'update';
-          description = `Se actualizó un recurso en ${req.path}`;
-          break;
-        case 'DELETE':
-          action = 'delete';
-          description = `Se eliminó un recurso en ${req.path}`;
-          break;
-        default:
-          return res.status(400).json({ error: 'Unsupported HTTP method' });
+
+      console.log(req.baseUrl);
+      if (['POST', 'PUT', 'DELETE'].includes(req.baseUrl)) {
+        let action: string;
+        let description: string;
+        switch (req.method) {
+          case 'POST':
+            action = 'create';
+            description = `Se creó un recurso en ${req.baseUrl}`;
+            break;
+          case 'PUT':
+            action = 'update';
+            description = `Se actualizó un recurso en ${req.baseUrl}`;
+            break;
+          case 'DELETE':
+            action = 'delete';
+            description = `Se eliminó un recurso en ${req.baseUrl}`;
+            break;
+          default:
+            return res.status(400).json({ error: 'Unsupported HTTP method' });
+        }
+
+        await this.prisma.log.create({
+          data: {
+            userId,
+            action,
+            description,
+          },
+        });
       }
 
-      await this.prisma.log.create({
-        data: {
-          userId,
-          action,
-          description,
-        },
-      });
       next();
     } catch (error) {
       console.log(error);
