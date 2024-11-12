@@ -111,4 +111,16 @@ export class ProductController {
   ): Promise<Kardex> {
     return this.productService.createKardex(createKardexDto);
   }
+
+  @Get('kardex/:id')
+  @ApiOperation({ summary: 'Get kardex entries by product ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return kardex entries for the product.',
+  })
+  @ApiResponse({ status: 404, description: 'Product not found.' })
+  @ApiResponse({ status: 500, description: 'Internal server error.' })
+  async findKardexByProduct(@Param('id') id: number): Promise<Kardex[]> {
+    return this.productService.findKardexByProduct(Number(id));
+  }
 }

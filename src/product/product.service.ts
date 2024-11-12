@@ -104,7 +104,11 @@ export class ProductService {
               warehouse: true,
             },
           },
-          kardex: true,
+          kardex: {
+            include: {
+              warehouse: true,
+            },
+          },
           transfer: true,
         },
       });
@@ -289,6 +293,25 @@ export class ProductService {
     } catch (error) {
       throw new InternalServerErrorException(
         `Error updating inventory: ${error.message}`,
+      );
+    }
+  }
+
+  async findKardexByProduct(id: number): Promise<Kardex[]> {
+    try {
+      const kardexs = await this.prisma.kardex.findMany({
+        where: {
+          productId: id,
+        },
+        include: {
+          product: true,
+          warehouse: true,
+        },
+      });
+      return kardexs;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error fetching kardex: ${error.message}`,
       );
     }
   }
