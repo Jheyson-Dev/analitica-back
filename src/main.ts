@@ -18,6 +18,6 @@ async function bootstrap() {
   });
 
   // await app.listen(3000, '192.168.18.22');
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(3000, '3.17.158.236');
 }
 bootstrap();
