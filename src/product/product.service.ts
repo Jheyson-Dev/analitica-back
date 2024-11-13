@@ -45,46 +45,56 @@ export class ProductService {
     try {
       let products;
 
-      if (user.role === 'admin' || user.area === 'AREA GENERAL') {
-        // Si el rol es admin, devolver todos los productos sin filtros
-        products = await this.prisma.product.findMany({
-          include: {
-            inventory: {
-              include: {
-                warehouse: true,
-              },
-            },
-            kardex: true,
-            transfer: true,
-          },
-        });
-      } else {
-        // Si el rol no es admin, aplicar los filtros correspondientes
-        const almacen = await this.prisma.area.findFirst({
-          where: {
-            name: user.area,
-          },
-        });
-
-        products = await this.prisma.product.findMany({
-          where: {
-            inventory: {
-              some: {
-                warehouseId: almacen.id,
-              },
+      // if (user.role === 'admin' || user.area === 'AREA GENERAL') {
+      //   // Si el rol es admin, devolver todos los productos sin filtros
+      //   products = await this.prisma.product.findMany({
+      //     include: {
+      //       inventory: {
+      //         include: {
+      //           warehouse: true,
+      //         },
+      //       },
+      //       kardex: true,
+      //       transfer: true,
+      //     },
+      //   });
+      // } else {
+      //   // Si el rol no es admin, aplicar los filtros correspondientes
+      //   const almacen = await this.prisma.area.findFirst({
+      //     where: {
+      //       name: user.area,
+      //     },
+      //   });
+      products = await this.prisma.product.findMany({
+        include: {
+          inventory: {
+            include: {
+              warehouse: true,
             },
           },
-          include: {
-            inventory: {
-              include: {
-                warehouse: true,
-              },
-            },
-            kardex: true,
-            transfer: true,
-          },
-        });
-      }
+          kardex: true,
+          transfer: true,
+        },
+      });
+      // products = await this.prisma.product.findMany({
+      //   where: {
+      //     inventory: {
+      //       some: {
+      //         warehouseId: almacen.id,
+      //       },
+      //     },
+      //   },
+      //   include: {
+      //     inventory: {
+      //       include: {
+      //         warehouse: true,
+      //       },
+      //     },
+      //     kardex: true,
+      //     transfer: true,
+      //   },
+      // });
+      // }
 
       return products;
     } catch (error) {

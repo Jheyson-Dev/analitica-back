@@ -37,44 +37,17 @@ let ProductService = class ProductService {
         console.log(user);
         try {
             let products;
-            if (user.role === 'admin' || user.area === 'AREA GENERAL') {
-                products = await this.prisma.product.findMany({
-                    include: {
-                        inventory: {
-                            include: {
-                                warehouse: true,
-                            },
-                        },
-                        kardex: true,
-                        transfer: true,
-                    },
-                });
-            }
-            else {
-                const almacen = await this.prisma.area.findFirst({
-                    where: {
-                        name: user.area,
-                    },
-                });
-                products = await this.prisma.product.findMany({
-                    where: {
-                        inventory: {
-                            some: {
-                                warehouseId: almacen.id,
-                            },
+            products = await this.prisma.product.findMany({
+                include: {
+                    inventory: {
+                        include: {
+                            warehouse: true,
                         },
                     },
-                    include: {
-                        inventory: {
-                            include: {
-                                warehouse: true,
-                            },
-                        },
-                        kardex: true,
-                        transfer: true,
-                    },
-                });
-            }
+                    kardex: true,
+                    transfer: true,
+                },
+            });
             return products;
         }
         catch (error) {
