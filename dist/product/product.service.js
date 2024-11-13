@@ -36,8 +36,7 @@ let ProductService = class ProductService {
     async findAll(user) {
         console.log(user);
         try {
-            let products;
-            products = await this.prisma.product.findMany({
+            const product = await this.prisma.product.findMany({
                 include: {
                     inventory: {
                         include: {
@@ -48,7 +47,8 @@ let ProductService = class ProductService {
                     transfer: true,
                 },
             });
-            return products;
+            console.log(product);
+            return product;
         }
         catch (error) {
             throw new common_1.InternalServerErrorException(`Error fetching products: ${error.message}`);

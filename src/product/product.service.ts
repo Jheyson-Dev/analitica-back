@@ -43,7 +43,7 @@ export class ProductService {
   async findAll(user): Promise<Product[]> {
     console.log(user);
     try {
-      let products;
+      // let products;
 
       // if (user.role === 'admin' || user.area === 'AREA GENERAL') {
       //   // Si el rol es admin, devolver todos los productos sin filtros
@@ -65,17 +65,18 @@ export class ProductService {
       //       name: user.area,
       //     },
       //   });
-      products = await this.prisma.product.findMany({
-        include: {
-          inventory: {
-            include: {
-              warehouse: true,
-            },
-          },
-          kardex: true,
-          transfer: true,
-        },
-      });
+      // products = await this.prisma.product.findMany({
+      //   include: {
+      //     inventory: {
+      //       include: {
+      //         warehouse: true,
+      //       },
+      //     },
+      //     kardex: true,
+      //     transfer: true,
+      //   },
+      // });
+      // console.log(products),
       // products = await this.prisma.product.findMany({
       //   where: {
       //     inventory: {
@@ -96,7 +97,19 @@ export class ProductService {
       // });
       // }
 
-      return products;
+      const product = await this.prisma.product.findMany({
+        include: {
+          inventory: {
+            include: {
+              warehouse: true,
+            },
+          },
+          kardex: true,
+          transfer: true,
+        },
+      });
+      console.log(product);
+      return product;
     } catch (error) {
       throw new InternalServerErrorException(
         `Error fetching products: ${error.message}`,
