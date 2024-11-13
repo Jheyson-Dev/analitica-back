@@ -104,14 +104,11 @@ export class ProductService {
               warehouse: true,
             },
           },
-          kardex: {
-            include: {
-              warehouse: true,
-            },
-          },
+          kardex: true,
           transfer: true,
         },
       });
+      console.log(product);
       return product;
     } catch (error) {
       throw new InternalServerErrorException(
